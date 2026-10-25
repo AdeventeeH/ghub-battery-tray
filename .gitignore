@@ -1,0 +1,6 @@
+*.lnk
+estado.json
+*.log
+.env
+.env.*
+work/
