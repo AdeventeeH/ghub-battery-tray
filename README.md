@@ -7,9 +7,10 @@ Indicador de bateria do Logitech G535 na area de notificacao do Windows, com lei
 - Bateria vertical com contorno preto e fundo transparente.
 - Carregando: somente um raio azul-claro dentro da bateria.
 - Carga completa: preenchimento verde.
-- 61 a 99%: tres barras; 31 a 60%: duas barras; ate 30%: uma barra vermelha.
+- 61 a 99%: tres barras azuis; 31 a 60%: duas barras amarelas; ate 30%: uma barra vermelha.
 - Percentual e autonomia ao passar o mouse; atualizacao a cada 30 segundos.
 - Menu para atualizar, abrir o G Hub ou sair.
+- Desligado, desconectado ou G Hub indisponivel: bateria com X vermelho; novas tentativas a cada 30 segundos.
 
 ## Requisitos
 
@@ -35,7 +36,7 @@ O pacote nao inclui logs, bancos de dados do G Hub, atalhos de um computador esp
 
 ## Limitacoes
 
-A comunicacao local utilizada e interna ao G Hub e pode mudar em atualizacoes. Se o headset estiver desconectado ou o G Hub indisponivel, aparece uma bateria cinza sem percentual. O contorno preto foi escolhido para barras de tarefas claras e pode ter pouco contraste no tema escuro. O tamanho final do icone e controlado pelo Windows.
+A comunicacao local utilizada e interna ao G Hub e pode mudar em atualizacoes. Se o headset estiver desconectado ou o G Hub indisponivel, aparece uma bateria com X vermelho sem percentual. O contorno preto foi escolhido para barras de tarefas claras e pode ter pouco contraste no tema escuro. O tamanho final do icone e controlado pelo Windows.
 
 Projeto independente, sem afiliacao com a Logitech. Nenhum arquivo, imagem ou componente proprietario do G Hub e redistribuido.
 
@@ -46,3 +47,4 @@ Sugestoes e melhorias sao bem-vindas. Ao relatar problemas, remova nomes de usua
 ## Licenca
 
 MIT. Consulte LICENSE.
+

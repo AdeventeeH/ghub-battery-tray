@@ -1,7 +1,8 @@
 Add-Type -AssemblyName System.Windows.Forms,System.Drawing
 Add-Type 'using System; using System.Runtime.InteropServices; public class IconNative { [DllImport("user32.dll")] public static extern bool DestroyIcon(IntPtr h); }'
 $mutex=[Threading.Mutex]::new($false,'Local\G535BatteryTray')
-if(-not $mutex.WaitOne(0)){exit}
+try { if(-not $mutex.WaitOne(0)){exit} } catch [Threading.AbandonedMutexException] { # Previous instance stopped unexpectedly; ownership has been acquired.
+}
 function Read-GHub($path) {
  $ws=[Net.WebSockets.ClientWebSocket]::new();$ws.Options.AddSubProtocol('json');$ct=[Threading.CancellationTokenSource]::new(4000)
  try {
@@ -25,7 +26,7 @@ $tray.ContextMenuStrip=$menu
 function Draw-Icon([int]$percentage,[bool]$charging=$false,[bool]$full=$false){
  $bmp=[Drawing.Bitmap]::new(32,32);$g=[Drawing.Graphics]::FromImage($bmp);$g.Clear([Drawing.Color]::Transparent)
  $known=$percentage -ge 0
- $color=if(-not $known){'Gray'}elseif($percentage -le 30 -and -not $full){'Tomato'}elseif($charging){'DeepSkyBlue'}elseif($full -or $percentage -ge 100){'PaleGreen'}else{'WhiteSmoke'}
+ $color=if(-not $known){'Gray'}elseif($full -or $percentage -ge 100){'LimeGreen'}elseif($percentage -le 30){'Tomato'}elseif($percentage -le 60){'Gold'}else{'DeepSkyBlue'}
  $brush=[Drawing.SolidBrush]::new([Drawing.Color]::FromName($color))
  $outline=[Drawing.Pen]::new([Drawing.Color]::FromArgb(220,25,25,25),4)
  $edge=[Drawing.Pen]::new([Drawing.Color]::FromName('Black'),2)
@@ -35,8 +36,11 @@ function Draw-Icon([int]$percentage,[bool]$charging=$false,[bool]$full=$false){
    $bars=if($percentage -le 30){1}elseif($percentage -le 60){2}else{3}
    for($i=0;$i -lt $bars;$i++){$g.FillRectangle($brush,10,(22-7*$i),12,5)}
   }
- }else{$g.FillRectangle($brush,12,17,8,2)}
- if($charging -and -not $full -and $percentage -lt 100){
+ }else{
+  $cross=[Drawing.Pen]::new([Drawing.Color]::Tomato,3)
+  $g.DrawLine($cross,11,12,21,23);$g.DrawLine($cross,21,12,11,23);$cross.Dispose()
+ }
+ if($known -and $charging -and -not $full -and $percentage -lt 100){
   $g.SmoothingMode='AntiAlias'
   $points=[Drawing.Point[]]@([Drawing.Point]::new(18,8),[Drawing.Point]::new(11,19),[Drawing.Point]::new(16,19),[Drawing.Point]::new(14,27),[Drawing.Point]::new(22,15),[Drawing.Point]::new(17,15))
   $boltEdge=[Drawing.Pen]::new([Drawing.Color]::FromArgb(255,20,20,20),2)
@@ -59,13 +63,18 @@ function Update-Battery {
   $text=('G535: {0}% - {1} - ~{2:N1} h (G Hub)' -f $p,$charge,$b.mileage)
   $tray.Text=$text.Substring(0,[Math]::Min(63,$text.Length));$status.Text=$text
  }catch{
-  Draw-Icon -1;$tray.Text='G535: sem leitura do G Hub';$status.Text='Sem leitura: confira o G Hub e o headset'
+  Draw-Icon -1;$tray.Visible=$true;$tray.Text='G535: desligado, desconectado ou G Hub indisponivel';$status.Text='Sem leitura - tentando novamente a cada 30 segundos'
  }
 }
 $update.Add_Click({Update-Battery});$open.Add_Click({Start-Process (Join-Path $env:ProgramFiles 'LGHUB\lghub.exe')});$tray.Add_DoubleClick({Start-Process (Join-Path $env:ProgramFiles 'LGHUB\lghub.exe')})
 $quit.Add_Click({[Windows.Forms.Application]::ExitThread()})
 $timer=[Windows.Forms.Timer]::new();$timer.Interval=30000;$timer.Add_Tick({Update-Battery});$timer.Start()
-try{Update-Battery;$tray.Visible=$true;[Windows.Forms.Application]::Run()}finally{$timer.Dispose();$tray.Visible=$false;if($tray.Icon){$tray.Icon.Dispose()};$tray.Dispose();$menu.Dispose();$mutex.ReleaseMutex();$mutex.Dispose()}
+try{Draw-Icon -1;$tray.Text="G535: aguardando leitura do G Hub";$tray.Visible=$true;Update-Battery;[Windows.Forms.Application]::Run()}finally{$timer.Dispose();$tray.Visible=$false;if($tray.Icon){$tray.Icon.Dispose()};$tray.Dispose();$menu.Dispose();$mutex.ReleaseMutex();$mutex.Dispose()}
+
+
+
+
+
 
 
 
