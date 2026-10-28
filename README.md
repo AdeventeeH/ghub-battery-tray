@@ -21,12 +21,18 @@ Windows 10/11, Windows PowerShell 5.1 e Logitech G Hub em execucao. Validado com
 1. Baixe o ZIP do repositorio em **Code > Download ZIP** e extraia em uma pasta permanente.
 2. Abra o Logitech G Hub e conecte o G535.
 3. Na pasta extraida, clique com o botao direito em **Criar-Atalho.ps1** e escolha **Executar com PowerShell**.
-4. Abra o atalho **Bateria do headset** criado nessa mesma pasta.
+4. Abra o atalho **Bateria do headset** criado nessa mesma pasta. O iniciador **Iniciar-Bateria.vbs** executa o indicador em segundo plano, sem abrir uma janela de terminal. Mantenha os tres arquivos juntos.
 5. Se necessario, arraste o icone da seta de icones ocultos para perto do relogio.
 
 O atalho usa uma opcao de execucao valida somente para o processo iniciado; nao altera a politica global do Windows. Se a organizacao bloquear scripts, siga as regras do administrador.
 
 Para iniciar junto com o Windows, copie o atalho para a pasta Inicializar do seu usuario. Isso e opcional e nao e feito automaticamente. Para remover, saia pelo menu do icone, remova esse atalho da pasta Inicializar se o tiver adicionado e apague a pasta do projeto.
+
+## Atualizar uma instalacao existente
+
+Saia pelo menu do icone, substitua os arquivos pela nova versao e execute **Criar-Atalho.ps1** novamente. Se usa inicializacao automatica, substitua tambem o atalho antigo na pasta Inicializar pelo novo atalho. Abra **Bateria do headset**. Para encerrar o programa, use o menu do icone > **Sair**.
+
+O iniciador utiliza o Windows Script Host. Se scripts VBS estiverem bloqueados no seu Windows, a inicializacao sem terminal por esse metodo nao estara disponivel; nao altere politicas de seguranca para contornar restricoes da organizacao.
 
 ## Privacidade
 
@@ -47,4 +53,5 @@ Sugestoes e melhorias sao bem-vindas. Ao relatar problemas, remova nomes de usua
 ## Licenca
 
 MIT. Consulte LICENSE.
+
 
